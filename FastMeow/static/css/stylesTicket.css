@@ -1,0 +1,23 @@
+        /* Fondo de contenedor principal */
+        .background-container {
+            background-color: #f8f9fa;
+            padding: 30px 0;
+        }
+
+        /* Contenedor con fondo blanco para el formulario */
+        .form-container {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        /* Estilo del área para la imagen de decoración */
+        .decor-image-area {
+            height: 100%;
+            border: 2px dashed #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }

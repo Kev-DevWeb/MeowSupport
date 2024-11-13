@@ -54,6 +54,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'MeowSupport.urls'
 
+
+# Asegúrate de que esta línea esté presente
+STATIC_URL = '/static/'
+
+# También puedes especificar la carpeta donde quieres almacenar los archivos estáticos
+# Si no tienes configurada esta línea, Django usará la carpeta 'static' por defecto.
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
