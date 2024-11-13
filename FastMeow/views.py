@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
-# Create your views here.
-def abrirticket (request):
-    return render(request, "abrirticket.html")
+def abrirticket(request):
+    return render(request, 'abrirticket.html')
+
 

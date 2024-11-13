@@ -22,5 +22,5 @@ from FastMeow.views import abrirticket
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('abrirticket/', abrirticket, name='busqueda'),
+    path('abrirticket/', abrirticket, name='abrirTicket'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
