@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Ticket</title>
+</head>
+<body>
+
+<h2>NUEVO TICKET</h2>
+<form action="/submit-ticket" method="post" enctype="multipart/form-data">
+    <label for="id_peticion">Id petición:</label>
+    <br><br>
+    
+    <label for="empleado_peticion">Empleado petición:</label>
+    <select id="empleado_peticion" name="empleado_peticion">
+        <option value="">selecciona un esclavo</option>
+    </select>
+    <br><br>
+    
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describa el problema..."></textarea>
+    <br><br>
+    
+    <label for="area">Área:</label>
+    <input type="text" id="area" name="area">
+    <br><br>
+    
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha">
+    <br><br>
+    
+    <label for="imagen">Anexar imagen:</label>
+    <input type="file" id="imagen" name="imagen" accept="image/*">
+    <br><br>
+    
+    <button type="submit">Guardar</button>
+</form>
+
+</body>
+</html>
