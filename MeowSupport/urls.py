@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from FastMeow.views import abrirticket, menu, status
+from FastMeow.views import abrirticket, menu, status, guardar_ticket
 
 urlpatterns = [
     path('', menu, name='menu'),  
     path('admin/', admin.site.urls), 
     path('status/', status, name='status'),  
     path('abrirticket/', abrirticket, name='abrir_ticket'), 
+    path('guardar_ticket/', guardar_ticket, name='guardar_ticket'), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

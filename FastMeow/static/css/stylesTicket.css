@@ -1,49 +1,55 @@
 /* Contenedor principal con flexbox */
 .background-container {
-    background-color: #f8f9fa;
-    padding: 30px 0;
-    display: flex;
-    flex-wrap: wrap; /* Asegura que los elementos se acomoden correctamente */
-    justify-content: center;
-  }
-  
-  /* Formulario */
-  .form-container {
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    border-radius: 8px;
-    max-width: 600px;
-    flex: 1 1 600px; /* Flexibilidad para que el formulario ocupe el espacio disponible */
-    margin: 0 15px;
-  }
-  
-  /* Imagen decorativa */
-  .decor-image-area {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-    flex: 1 1 400px; /* Flexibilidad para que la imagen se adapte */
-  }
-  
-  .decor-image-area img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  background-color: #f8f9fa;
+  padding: 30px 0;
+  display: flex;
+  flex-wrap: wrap; /* Asegura que los elementos se acomoden correctamente */
+  justify-content: center;
+}
 
-  .decor-image-area {
-    margin-right: 20px; /* Espacio a la derecha de la imagen */
-  }
+/* Formulario */
+.form-container {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 600px;
+  flex: 1 1 600px; /* Flexibilidad para que el formulario ocupe el espacio disponible */
+  margin: 0 15px;
+}
 
-  @media (max-width: 768px) {
-    .background-container {
+/* Imagen decorativa */
+.decor-image-area {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* La imagen ocupará toda la altura de la ventana */
+  overflow: hidden;
+  flex: 1 1 50%; /* Flexibilidad para que la imagen ocupe el 50% del ancho disponible */
+  margin-right: 0; /* Sin margen a la derecha */
+}
+
+.decor-image-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px; 
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .background-container {
       flex-direction: column; /* Pone el formulario y la imagen uno debajo del otro */
-    }
-  
-    .decor-image-area {
-      height: 250px; /* Ajustar la altura de la imagen en pantallas pequeñas */
-    }
+      align-items: center; /* Centra los elementos */
   }
-  
+
+  .form-container {
+      max-width: 90%; /* Ajusta el tamaño del formulario en pantallas pequeñas */
+      margin-bottom: 20px; /* Espacio entre el formulario y la imagen */
+  }
+
+  .decor-image-area {
+      height: 300px; /* Ajustar la altura de la imagen en pantallas pequeñas */
+      flex: 1 1 100%; /* La imagen ocupa todo el ancho en pantallas pequeñas */
+      margin-right: 0; /* Elimina el margen derecho */
+  }
+}

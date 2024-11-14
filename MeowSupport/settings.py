@@ -60,9 +60,10 @@ STATIC_URL = '/static/'
 
 # También puedes especificar la carpeta donde quieres almacenar los archivos estáticos
 # Si no tienes configurada esta línea, Django usará la carpeta 'static' por defecto.
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+
+# MEDIA settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 TEMPLATES = [
     {
