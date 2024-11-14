@@ -46,104 +46,47 @@
           <div class="col-md-6">
             <h2 class="mb-4">Nuevo Ticket</h2>
 
-            <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-
-              <!-- Nombre del Cliente -->
-              <div class="mb-3">
-                <label for="id_nombre_cliente" class="form-label"
-                  >Nombre del Cliente:</label
-                >
-                <input
-                  type="text"
-                  id="id_nombre_cliente"
-                  name="nombre_cliente"
-                  class="form-control"
-                  required
-                />
-              </div>
-
-              <!-- Correo del Cliente -->
-              <div class="mb-3">
-                <label for="id_correo_cliente" class="form-label"
-                  >Correo del Cliente:</label
-                >
-                <input
-                  type="email"
-                  id="id_correo_cliente"
-                  name="correo_cliente"
-                  class="form-control"
-                  required
-                />
-              </div>
-
-              <!-- Número de Cliente -->
-              <div class="mb-3">
-                <label for="id_numero_cliente" class="form-label"
-                  >Número telefónico:</label
-                >
-                <input
-                  type="tel"
-                  id="id_numero_cliente"
-                  name="numero_cliente"
-                  class="form-control"
-                  required
-                />
-              </div>
-
-              <!-- Categoría -->
-              <div class="mb-3">
-                <label for="id_categoria" class="form-label">Categoría:</label>
-                <select id="id_categoria" name="categoria" class="form-select">
-                  <option value="">Selecciona una categoría</option>
-                  {% for categoria in categorias %}
-                  <option value="{{ categoria.id }}">
-                    {{ categoria.nombre }}
-                  </option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <!-- Prioridad -->
-              <div class="mb-3">
-                <label for="id_prioridad" class="form-label">Prioridad:</label>
-                <select id="id_prioridad" name="prioridad" class="form-select">
-                  <option value="">Selecciona una prioridad</option>
-                  {% for prioridad in prioridades %}
-                  <option value="{{ prioridad.id }}">
-                    {{ prioridad.nombre }}
-                  </option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <!-- Descripción -->
-              <div class="mb-3">
-                <label for="id_detalle" class="form-label">Descripción:</label>
-                <textarea
-                  id="id_detalle"
-                  name="detalle"
-                  class="form-control"
-                  rows="4"
-                  placeholder="Describa el problema..."
-                ></textarea>
-              </div>
-
-              <!-- Imagen -->
-              <div class="mb-3">
-                <label for="id_imagen" class="form-label">Anexar imagen:</label>
-                <input
-                  type="file"
-                  id="id_imagen"
-                  name="imagen"
-                  accept="image/*"
-                  class="form-control"
-                />
-              </div>
-
-              <!-- Botón de enviar -->
-              <button type="submit" class="btn btn-primary">Guardar</button>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre_cliente" class="form-label">Nombre del Cliente:</label>
+                    <input type="text" class="form-control" id="nombre_cliente" name="nombre_cliente" required>
+                </div>
+                <div class="mb-3">
+                    <label for="correo_cliente" class="form-label">Correo Electrónico:</label>
+                    <input type="email" class="form-control" id="correo_cliente" name="correo_cliente" required>
+                </div>
+                <div class="mb-3">
+                    <label for="numero_cliente" class="form-label">Número de Teléfono:</label>
+                    <input type="text" class="form-control" id="numero_cliente" name="numero_cliente" required>
+                </div>
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoría:</label>
+                    <select id="categoria" name="categoria" class="form-select">
+                        {% for categoria in categoria %}
+                            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="prioridad" class="form-label">Prioridad:</label>
+                    <select id="prioridad" name="prioridad" class="form-select">
+                        {% for prioridad in prioridad %}
+                            <option value="{{ prioridad.id }}">{{ prioridad.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="detalle" class="form-label">Detalle del Ticket:</label>
+                    <textarea class="form-control" id="detalle" name="detalle" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Subir Imagen:</label>
+                    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary">Crear Ticket</button>
             </form>
+            
           </div>
 
           <!-- Columna para la imagen de decoración (derecha) -->
