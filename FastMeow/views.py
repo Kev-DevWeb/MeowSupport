@@ -68,7 +68,7 @@ def guardar_ticket(request):
                 imagen_obj.save()
 
             # Mensaje de éxito
-            messages.success(request, f"Ticket creado para {nombre_cliente} con ID {ticket.id}")
+            messages.success(request, f"Ticket creado para {nombre_cliente} con ID {ticket.id_compuesto}")
             return redirect('abrir_ticket')
         except Exception as e:
             # Mensaje de error
