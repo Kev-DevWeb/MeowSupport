@@ -31,6 +31,7 @@ class Prioridad(models.Model):
     def __str__(self):
         return self.nombre
     
+    
 class Ticket(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     categoria = models.ForeignKey(CategoriaProblema, on_delete=models.SET_NULL, null=True)
@@ -38,7 +39,7 @@ class Ticket(models.Model):
     prioridad = models.ForeignKey(Prioridad, on_delete=models.SET_NULL, null=True)
     detalle = models.TextField()
     fecha_creacion = models.DateTimeField(default=timezone.now) 
-    id_compuesto = models.CharField(max_length=255, unique=True, blank=True)  # Campo id_compuesto
+    id_compuesto = models.CharField(max_length=255, primary_key=True, blank=True)
     
     def save(self, *args, **kwargs):
         if not self.id_compuesto:  # Si no existe un id_compuesto, generarlo
@@ -102,8 +103,9 @@ class Ticket(models.Model):
     def __str__(self):
         return f"Ticket #{self.id_compuesto}"
 
+
 class Comentario(models.Model):
-    ticket = models.ForeignKey(Ticket, on_delete=models.SET_NULL, null=True, related_name='comentarios')
+    ticket = models.ForeignKey(Ticket, to_field='id_compuesto', on_delete=models.SET_NULL, null=True, related_name='comentarios')
     ticket_archivado = models.ForeignKey('TicketsArchivados', on_delete=models.SET_NULL, null=True, related_name='comentarios_archivados')
     tecnico = models.CharField(max_length=100)
     comentario = models.TextField()
@@ -112,24 +114,25 @@ class Comentario(models.Model):
     prioridad = models.ForeignKey(Prioridad, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"Comentario por {self.tecnico} en Ticket {self.ticket.id_compuesto}"
+        return f"Comentario por {self.tecnico} en Ticket {self.ticket.id_compuesto}" if self.ticket else "Comentario en Ticket Archivado"
+
 
 class Imagen(models.Model):
-    ticket = models.ForeignKey(Ticket, on_delete=models.SET_NULL, null=True, related_name='imagenes')
+    ticket = models.ForeignKey(Ticket, to_field='id_compuesto', on_delete=models.SET_NULL, null=True, related_name='imagenes')
     ticket_archivado = models.ForeignKey('TicketsArchivados', on_delete=models.SET_NULL, null=True, related_name='imagenes_archivadas')
     imagen = models.ImageField(upload_to='ticket_images/')
 
     def __str__(self):
-        return f"Imagen para Ticket {self.ticket.id_compuesto}"
+        return f"Imagen para Ticket {self.ticket.id_compuesto}" if self.ticket else "Imagen para Ticket Archivado"
+
 
 class TicketsArchivados(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     categoria = models.ForeignKey(CategoriaProblema, on_delete=models.SET_NULL, null=True)
     estado = models.ForeignKey(Estado, on_delete=models.SET_NULL, null=True)
     prioridad = models.ForeignKey(Prioridad, on_delete=models.SET_NULL, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField()
     detalle = models.TextField()
-    numero = models.IntegerField()
     id_compuesto = models.CharField(max_length=50, unique=True, editable=False)
 
     def __str__(self):
