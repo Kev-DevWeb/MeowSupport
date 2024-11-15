@@ -75,4 +75,16 @@ def guardar_ticket(request):
             messages.error(request, f"No se pudo registrar el ticket. Error: {e}")
             return redirect('abrir_ticket')
 
-        
+
+def buscar_status_por_id_compuesto(request):# lo hice por el otro pero salia raro mejor xd 
+
+    id_compuesto = request.GET.get('id_compuesto')
+    status = None
+
+    if id_compuesto:
+        try:
+            status = Ticket.objects.get(id_compuesto=id_compuesto)
+        except Ticket.DoesNotExist:
+            status = None
+
+    return render(request, 'status.html', {'status': status, 'id_compuesto': id_compuesto})

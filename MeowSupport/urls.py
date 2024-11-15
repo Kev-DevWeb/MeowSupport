@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from FastMeow.views import abrirticket, menu, status, guardar_ticket
+from FastMeow.views import abrirticket, menu, status, guardar_ticket,buscar_status_por_id_compuesto
 
 urlpatterns = [
     path('', menu, name='menu'),  
@@ -26,4 +26,5 @@ urlpatterns = [
     path('status/', status, name='status'),  
     path('abrirticket/', abrirticket, name='abrir_ticket'), 
     path('guardar_ticket/', guardar_ticket, name='guardar_ticket'), 
+    path('buscar_status/', buscar_status_por_id_compuesto, name='buscar_status_por_id_compuesto'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

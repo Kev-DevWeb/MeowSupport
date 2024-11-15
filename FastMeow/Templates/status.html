@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda de Estado de Ticket</title>
+    {% load static %}
+    
+    <!-- Enlaces a CSS -->
+    <link href="{% static 'css/stylesBuscarStatus.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <header>
+      <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </div>
+      <h4>Buscar Estado de Ticket</h4>
+    </header>
+
+    <nav id="menuNav">
+      <div class="menu-close" id="menuClose">
+        <i class="fas fa-times"></i>
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'abrir_ticket' %}">
+            <i class="fas fa-ticket-alt"></i> Alta de Ticket
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'status' %}">
+            <i class="fas fa-tasks"></i> Estatus del Ticket
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+
+    <div class="container mt-5 pt-5">
+        <div class="card mb-4" style="width: 90%; max-width: 600px; margin: 0 auto;">
+            <div class="card-body">
+                <h5 class="card-title">Buscar Estado de Ticket </h5>
+                <form method="GET" action="{% url 'buscar_status_por_id_compuesto' %}">
+                    <div class="mb-3">
+                        <label for="id_compuesto" class="form-label">ID :</label>
+                        <input type="text" class="form-control" id="id_compuesto" name="id_compuesto" value="{{ id_compuesto }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buscar Ticket</button>
+                </form>
+
+                {% if status %}
+                    <h5 class="mt-4">Detalles del Ticket</h5>
+                    <table class="cat-table">
+                        <tr><th>ID </th><td><i class="fas fa-paw cat-icon"></i>{{ status.id_compuesto }}</td></tr>
+                        <tr><th>Cliente</th><td><i class="fas fa-cat cat-icon"></i>{{ status.cliente.nombre }}</td></tr>
+                        <tr><th>Categoría</th><td><i class="fas fa-bookmark cat-icon"></i>{{ status.categoria.nombre }}</td></tr>
+                        <tr><th>Prioridad</th><td><i class="fas fa-exclamation-circle cat-icon"></i>{{ status.prioridad.nombre }}</td></tr>
+                        <tr><th>Estado</th><td><i class="fas fa-info-circle cat-icon"></i>{{ status.estado.nombre }}</td></tr>
+                        <tr><th>Fecha de Creación</th><td><i class="fas fa-calendar-alt cat-icon"></i>{{ status.fecha_creacion }}</td></tr>
+                        <tr><th>Detalle</th><td><i class="fas fa-clipboard cat-icon"></i>{{ status.detalle }}</td></tr>
+                    </table>
+                {% elif id_compuesto %}
+                    <p class="no-ticket-message">No se encontró ningún ticket con el ID : {{ id_compuesto }}.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById("menuToggle").addEventListener("click", function () {
+          this.classList.toggle("active");
+          document.getElementById("menuNav").classList.toggle("active");
+      });
+
+      document.getElementById("menuClose").addEventListener("click", function () {
+          document.getElementById("menuNav").classList.remove("active");
+      });
+    </script>
+</body>
+</html>
