@@ -76,7 +76,6 @@ class Ticket(models.Model):
             prioridad=self.prioridad,
             fecha_creacion=self.fecha_creacion,
             detalle=self.detalle,
-            numero=self.numero,
             id_compuesto=self.id_compuesto
         )
 
