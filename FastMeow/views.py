@@ -241,6 +241,87 @@ def agregar_comentario(request, ticket_id, rol, clave, nombre):
         'comentarios': comentarios,  # Pasar los comentarios al contexto
     })
 
+def editar(request, ticket_id, rol, clave, nombre):
+    categorias = CategoriaProblema.objects.all()
+    prioridades = Prioridad.objects.all()
+    clientes = Cliente.objects.all()
+    estados = Estado.objects.all()  # Asegúrate de obtener todos los estados
+    ticket = Ticket.objects.get(id_compuesto=ticket_id)  # Obtener el ticket actual por su ID
+    status = ticket.estado  # Obtener el estado actual del ticket
+
+    # Obtener la primera imagen asociada al ticket si existe
+    imagen = ticket.imagenes.first()  # Usamos 'imagenes' en lugar de 'imagen_set'
+
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        cliente_id = request.POST.get('cliente')
+        categoria_id = request.POST.get('categoria')
+        prioridad_id = request.POST.get('prioridad')
+        estado_id = request.POST.get('estado')
+        detalle = request.POST.get('detalle')
+        imagen_archivo = request.FILES.get('imagen')  # Imagen subida
+
+        try:
+            # Actualizar el ticket con los nuevos datos
+            cliente = Cliente.objects.get(id=cliente_id)
+            estado = Estado.objects.get(id=estado_id)
+            categoria = CategoriaProblema.objects.get(id=categoria_id)
+            prioridad = Prioridad.objects.get(id=prioridad_id)
+
+            # Asignar nuevos valores al ticket
+            ticket.cliente = cliente
+            ticket.categoria = categoria
+            ticket.estado = estado
+            ticket.prioridad = prioridad
+            ticket.detalle = detalle
+
+            ticket.save()  # Guardar los cambios
+
+            # Si se ha subido una nueva imagen, actualizamos la imagen relacionada
+            if imagen_archivo:
+                # Si ya existe una imagen anterior, la eliminamos
+                if ticket.imagenes.exists():  # Usar 'imagenes' en lugar de 'imagen_set'
+                    ticket.imagenes.all().delete()
+
+                # Crear un nuevo objeto de Imagen
+                imagen_obj = Imagen(ticket=ticket, imagen=imagen_archivo)
+                imagen_obj.save()
+
+            # Mensaje de éxito
+            messages.success(request, f"Ticket {ticket.id_compuesto} actualizado con éxito.")
+            return redirect('editar', ticket_id=ticket.id, rol=rol, clave=clave, nombre=nombre)
+
+        except Exception as e:
+            # Mensaje de error
+            messages.error(request, f"No se pudo actualizar el ticket. Error: {e}")
+            return render(request, 'editar.html', {
+                'ticket': ticket,
+                'rol': rol,
+                'clave': clave,
+                'nombre': nombre,
+                'prioridades': prioridades,
+                'status': status,
+                'categorias': categorias,
+                'clientes': clientes,
+                'estados': estados,  # Pasar la lista de estados
+                'imagen': imagen.imagen.url if imagen else None  # Verificar si imagen existe
+            })
+
+    
+    # Si la solicitud es GET, se muestra el formulario con los datos actuales
+    return render(request, 'editar.html', {
+        'ticket': ticket,
+        'rol': rol,
+        'clave': clave,
+        'nombre': nombre,
+        'categorias': categorias,
+        'prioridades': prioridades,
+        'clientes': clientes,
+        'status': status,
+        'estados': estados,  # Pasar la lista de estados
+    })
+
+
 
 
 def ticket_delete(request, id_compuesto):

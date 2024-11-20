@@ -144,7 +144,7 @@
                 <td>{{ ticket.prioridad }}</td>
                 <td>
                     <a href="{% url 'ver' ticket_id=ticket.id_compuesto rol=rol clave=clave nombre=nombre %}" class="btn btn-info btn-sm">Ver</a>
-                    <a href="#" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'editar' ticket_id=ticket.id_compuesto rol=rol clave=clave nombre=nombre %}" class="btn btn-warning btn-sm">Editar</a>
                     <form action="#" method="post" style="display: inline;">
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este ticket?');">Eliminar</button>
                     </form>
