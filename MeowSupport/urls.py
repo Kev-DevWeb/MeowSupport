@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from FastMeow.views import abrirticket, menu, status, guardar_ticket,buscar_status_por_id_compuesto,ticket_list,ticket_create,ticket_update,ticket_delete,ticket_view
+from FastMeow.views import abrirticket, menu, status, guardar_ticket,buscar_status_por_id_compuesto, menu2, ver, agregar_comentario
 
 urlpatterns = [
     path('', menu, name='menu'),  
@@ -27,11 +27,10 @@ urlpatterns = [
     path('abrirticket/', abrirticket, name='abrir_ticket'), 
     path('guardar_ticket/', guardar_ticket, name='guardar_ticket'), 
     path('buscar_status/', buscar_status_por_id_compuesto, name='buscar_status_por_id_compuesto'),
-    
-    path('tickets/', ticket_list, name='ticket_list'),
-    path('tickets/crear/', ticket_create, name='ticket_create'),
-    path('tickets/<str:ticket_id>/editar/', ticket_update, name='ticket_update'),
-    path('tickets/eliminar/<str:ticket_id>/', ticket_delete, name='ticket_delete'),
-    path('tickets/ver/<str:ticket_id>/', ticket_view, name='ticket_view'),
-
+    path('menu2/<str:rol>/<str:clave>/<str:nombre>/', menu2, name='menu2'),
+    path('ver/<str:ticket_id>/<str:rol>/<str:clave>/<str:nombre>/', ver, name='ver'),
+    path('ticket/<str:ticket_id>/agregar_comentario/<str:rol>/<str:clave>/<str:nombre>/', agregar_comentario, name='agregar_comentario'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
