@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Tickets</title>
+    
+    <!-- Cargar los archivos estáticos -->
+    {% load static %}
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: white;
+            font-family: "Arial", sans-serif;
+            margin-top: 60px; /* Para no chocar con el header */
+        }
+        header {
+            background-color: #d84727;
+            color: white;
+            padding: 1rem 2rem; /* Ajusté el padding para que el header tenga espacio adecuado */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: flex-start; /* Alinea los elementos desde la izquierda */
+            align-items: center; /* Alinea verticalmente los elementos */
+            position: fixed;
+            border-bottom: 2px solid #bd3f23;
+            top: 0;
+            width: 100%;
+            z-index: 1050;
+        }
+        header .menu-toggle {
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-right: 1rem; /* Espacio entre el botón de hamburguesa y el h4 */
+          }
+
+        header h4 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            flex-grow: 1;
+        }
+        .menu-close {
+            font-size: 2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+          }
+
+        nav { position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #ffb563;
+            transition: left 0.3s ease-in-out;
+            padding-top: 60px;
+            z-index: 1040;
+            box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.1);
+          }
+        nav.active {
+            left: 0;
+        }
+        .nav-item a {  
+            color: #2c3e50;
+            font-size: 1.2rem;
+            padding: 15px 20px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .nav-item a i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        .nav-item a:hover {
+            background-color: #2c3e50;
+            color: white;
+        }
+        .nav-item a i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+          }
+          
+          .nav-item a:hover {
+            background-color: #2c3e50;
+            color: white;
+          }
+
+        .container {
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2d3436;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #2d3436;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #444;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .form-control:focus {
+            border-color: #d84727;
+            box-shadow: 0 0 8px rgba(216, 71, 39, 0.5);
+        }
+
+        button {
+            background-color: #2d3436;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+
+        button i {
+            font-size: 1.2rem;
+            margin-left: 8px;
+        }
+
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #2d3436;
+            color: white;
+        }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table-striped tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .row > .col-md-4 {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <h4>Mis Tickets</h4>
+    </header>
+
+    <nav id="menuNav">
+      <div class="menu-close" id="menuClose">
+        <i class="fas fa-times"></i>
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'abrir_ticket' %}">
+            <i class="fas fa-ticket-alt"></i> Alta de Ticket
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'status' %}">
+            <i class="fas fa-tasks"></i> Estatus del Ticket
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mis_tickets' %}">
+            <i class="fas fa-folder-open"></i> Mis Tickets
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Mis Tickets</h1>
+        
+        <!-- Mensajes de error o éxito -->
+        {% if messages %}
+            <div class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Formulario -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="nombre_cliente" class="form-label">Nombre:</label>
+                    <input type="text" id="nombre_cliente" name="nombre_cliente" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="correo_cliente" class="form-label">Correo:</label>
+                    <input type="email" id="correo_cliente" name="correo_cliente" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="numero_cliente" class="form-label">Número de Teléfono:</label>
+                    <input type="text" id="numero_cliente" name="numero_cliente" class="form-control" required>
+                </div>
+            </div>
+            <button type="submit">
+                Consultar <i class="fas fa-search"></i>
+            </button>
+        </form>
+
+        <!-- Mensaje cuando no se encuentran registros -->
+        {% if tickets is not none and not tickets %}
+            <div class="alert">
+                No se encontraron tickets para los criterios proporcionados.
+            </div>
+        {% endif %}
+
+        <!-- Resultados -->
+        {% if tickets %}
+            <h2>Tickets Encontrados</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Id Ticket</th>
+                        <th>Detalle</th>
+                        <th>Fecha de Creación</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.id_compuesto }}</td>
+                        <td>{{ ticket.detalle }}</td>
+                        <td>{{ ticket.fecha_creacion }}</td>
+                        <td>{{ ticket.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("menuToggle").addEventListener("click", function () {
+            this.classList.toggle("active");
+            document.getElementById("menuNav").classList.toggle("active");
+          });
+        
+          document.getElementById("menuClose").addEventListener("click", function () {
+            document.getElementById("menuNav").classList.remove("active");
+          }); 
+    </script>
+</body>
+</html>

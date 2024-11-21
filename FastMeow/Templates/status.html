@@ -16,27 +16,32 @@
         <div class="menu-toggle" id="menuToggle">
             <i class="fas fa-bars"></i>
         </div>
-        <h4>Estado del Ticket</h4>
+        <h4>Estatus del Ticket</h4>
     </header>
 
     <nav id="menuNav">
         <div class="menu-close" id="menuClose">
-            <i class="fas fa-times"></i>
+          <i class="fas fa-times"></i>
         </div>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'abrir_ticket' %}">
-                    <i class="fas fa-ticket-alt"></i> Alta de Ticket
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'status' %}">
-                    <i class="fas fa-tasks"></i> Estatus del Ticket
-                </a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'abrir_ticket' %}">
+              <i class="fas fa-ticket-alt"></i> Alta de Ticket
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'status' %}">
+              <i class="fas fa-tasks"></i> Estatus del Ticket
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'mis_tickets' %}">
+              <i class="fas fa-folder-open"></i> Mis Tickets
+            </a>
+          </li>
         </ul>
-    </nav>
-
+      </nav>
+      
     <div class="container mt-5 pt-5">
         {% if status %}
             <!-- Mostrar detalles del ticket si se encontró el status -->

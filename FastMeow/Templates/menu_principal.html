@@ -38,6 +38,11 @@
             <i class="fas fa-tasks"></i> Estatus del Ticket
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mis_tickets' %}">
+            <i class="fas fa-folder-open"></i> Mis Tickets
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -63,6 +68,18 @@
                 <h5 class="card-title m-0">Estatus del Ticket</h5>
               </div>
               <a href="{% url 'status' %}" class="btn btn-secondary">Ir</a>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-4" style="width: 90%; max-width: 600px;">
+          <div class="d-flex align-items-center">
+            <img src="{% static 'resources/my_ticket.png' %}" alt="Mis Tickets" class="card-image">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-folder-open card-icon me-2"></i>
+                <h5 class="card-title m-0">Mis Tickets</h5>
+              </div>
+              <a href="{% url 'mis_tickets' %}" class="btn btn-primary">Ir</a>
             </div>
           </div>
         </div>

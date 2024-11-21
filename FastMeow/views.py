@@ -479,3 +479,32 @@ def ver_archivados(request, ticket_id2, rol, clave, nombre):
     })
 
 
+def mis_tickets(request):
+    tickets = None
+
+    if request.method == 'POST':
+        # Recogemos los datos del formulario
+        nombre_cliente = request.POST.get('nombre_cliente')
+        correo_cliente = request.POST.get('correo_cliente')
+        numero_cliente = request.POST.get('numero_cliente')
+
+        try:
+            # Verificamos si existe el cliente con los datos proporcionados
+            cliente = Cliente.objects.get(
+                nombre__iexact=nombre_cliente,  # le vale que lo pongas en Mayusculas y Minusculas
+                email__iexact=correo_cliente,  # le vale que lo pongas en Mayusculas y Minusculas
+                telefono=numero_cliente
+            )
+
+            # con esta madre se filtra
+            tickets = Ticket.objects.filter(cliente=cliente)
+
+            if not tickets.exists():
+                messages.info(request, "No se encontraron tickets asociados a tus datos.")
+        except Cliente.DoesNotExist:
+            messages.error(request, "No se encontró ningún ticket con los datos proporcionados.")
+        except Exception as e:
+            messages.error(request, f"Ocurrió un error inesperado: {e}")
+
+    # Renderizamos la página con el formulario y los resultados
+    return render(request, 'mis_tickets.html', {'tickets': tickets})

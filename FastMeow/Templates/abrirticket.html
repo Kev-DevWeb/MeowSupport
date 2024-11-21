@@ -20,11 +20,11 @@
   <body>
     <header>
       <div class="menu-toggle" id="menuToggle">
-       
-        <i class="fas fa-bars"></i>
-        
+          <i class="fas fa-bars"></i>
       </div>
-    </header>
+      <h4>Alta de ticket</h4>
+  </header>
+
     <nav id="menuNav">
       <div class="menu-close" id="menuClose">
         <i class="fas fa-times"></i>
@@ -38,6 +38,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'status' %}">
             <i class="fas fa-tasks"></i> Estatus del Ticket
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mis_tickets' %}">
+            <i class="fas fa-folder-open"></i> Mis Tickets
           </a>
         </li>
       </ul>
