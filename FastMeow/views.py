@@ -11,11 +11,6 @@ from django.db import transaction
 def menu(request):
     return render(request, 'menu_principal.html')
 
-def status(request):
-    return render(request, 'status.html')
-
-
-
 def abrirticket(request):
     # Obtener los datos de clientes y productos para el formulario
     categoria = CategoriaProblema.objects.all()
@@ -78,18 +73,64 @@ def guardar_ticket(request):
             return redirect('abrir_ticket')
 
 
-def buscar_status_por_id_compuesto(request):# lo hice por el otro pero salia raro mejor xd 
+def status(request):
+    return render(request, 'status.html')
 
-    id_compuesto = request.GET.get('id_compuesto')
+
+def buscar_status_por_id_compuesto(request):
+    # Obtenemos el 'ticket_id' desde los parámetros GET de la URL
+    ticket_id = request.GET.get('ticket_id')  # Esto obtiene el ticket_id enviado a través de la URL
+    
     status = None
+    imagen = None
+    comentarios = None
 
-    if id_compuesto:
+    # Verificamos si ticket_id está presente antes de intentar buscar el ticket
+    if ticket_id:
         try:
-            status = Ticket.objects.get(id_compuesto=id_compuesto)
+            # Usamos el ticket_id para buscar el ticket correspondiente
+            status = Ticket.objects.get(id_compuesto=ticket_id)
+            # Usamos filter() para obtener todas las imágenes y comentarios relacionados
+            imagen = Imagen.objects.filter(ticket=status).first()  # Obtener la primera imagen si existe
+            comentarios = Comentario.objects.filter(ticket=status)  # Obtener todos los comentarios
         except Ticket.DoesNotExist:
             status = None
 
-    return render(request, 'status.html', {'status': status, 'id_compuesto': id_compuesto})
+    return render(request, 'status.html', {
+        'status': status,
+        'id_compuesto': ticket_id,  # Pasamos el ticket_id a la plantilla para mostrarlo
+        'imagen': imagen,  # Puede ser None si no se encuentra imagen
+        'comentarios': comentarios  # Puede ser un QuerySet vacío si no hay comentarios
+    })
+
+
+def agregar_comentario_cliente(request, ticket_id):
+    # Obtener el ticket por su id_compuesto
+    ticket = get_object_or_404(Ticket, id_compuesto=ticket_id)
+    
+    # Obtener todos los comentarios asociados al ticket
+    comentarios = Comentario.objects.filter(ticket=ticket).all()
+
+    if request.method == 'POST':
+        comentario_texto = request.POST.get('comentarios')  # Asegurarse de usar el nombre correcto del campo
+
+        if comentario_texto:
+            # Obtener el nombre del cliente desde el ticket
+            nombre_cliente = ticket.cliente.nombre
+            
+            # Crear el nuevo comentario
+            comentario = Comentario(
+                ticket=ticket,
+                tecnico=nombre_cliente,  # Guardar el nombre del cliente como nombre del técnico
+                comentario=comentario_texto
+            )
+            comentario.save()
+
+            # Redirige a la página de detalles del ticket con los datos adecuados
+            return redirect('status')
+
+    # Si no se hace POST, se pasa todo al contexto de la plantilla
+    return render(request, 'status.html')
 
 
 
