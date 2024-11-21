@@ -322,44 +322,119 @@ def editar(request, ticket_id, rol, clave, nombre):
     })
 
 
+from django.shortcuts import get_object_or_404, redirect
+from django.db import transaction
+from django.http import HttpResponse
 
+def eliminar(request, ticket_id, rol, clave, nombre):
+    ticket = get_object_or_404(Ticket, id_compuesto=ticket_id)
 
-def ticket_delete(request, id_compuesto):
-    ticket = get_object_or_404(Ticket, id_compuesto=id_compuesto)
     if request.method == 'POST':
-        # Copiar a la tabla de tickets archivados dentro de una transacción
         with transaction.atomic():
-            archived_ticket = TicketsArchivados.objects.create(
+            # Crear un registro en TicketsArchivados con los datos del ticket actual
+            ticket_archivado = TicketsArchivados.objects.create(
                 cliente=ticket.cliente,
                 categoria=ticket.categoria,
                 estado=ticket.estado,
                 prioridad=ticket.prioridad,
                 fecha_creacion=ticket.fecha_creacion,
                 detalle=ticket.detalle,
-                id_compuesto=ticket.id_compuesto
+                id_compuesto=ticket.id_compuesto,
             )
+            
+            # Mover comentarios e imágenes asociadas
+            Comentario.objects.filter(ticket=ticket).update(ticket=None, ticket_archivado=ticket_archivado)
+            Imagen.objects.filter(ticket=ticket).update(ticket=None, ticket_archivado=ticket_archivado)
+            
+            # Eliminar el ticket original
+            ticket.delete()
 
-            # Copiar los comentarios
-            for comentario in ticket.comentarios.all():
-                Comentario.objects.create(
-                    ticket=None,
-                    tecnico=comentario.tecnico,
-                    comentario=comentario.comentario,
-                    estado=comentario.estado,
-                    prioridad=comentario.prioridad,
-                    fecha_comentario=comentario.fecha_comentario
-                )
-
-            # Copiar las imágenes
-            for imagen in ticket.imagenes.all():
-                Imagen.objects.create(
-                    ticket=None,
-                    imagen=imagen.imagen
-                )
-
-            ticket.delete()  # Eliminar el ticket original
-
-        return redirect('menu2')  # Redirige a la lista de tickets después de eliminar
+        return redirect('menu2', rol=rol, clave=clave, nombre=nombre)
 
     return HttpResponse("Método no permitido", status=405)
+
+
+def nuevoticket(request, rol, clave, nombre):
+    # Obtener los datos de clientes y productos para el formulario
+    categoria = CategoriaProblema.objects.all()
+    prioridad = Prioridad.objects.all()
+    
+    today = timezone.now().date()  # Obtener la fecha de hoy
+    
+    return render(request, 'nuevoticket.html', {'categoria': categoria, 'prioridad': prioridad, 'today': today, 'nombre': nombre,
+        'rol': rol, 
+        'clave': clave, })
+
+def guardar_ticket2(request, rol, clave, nombre):
+    categorias = CategoriaProblema.objects.all()
+    prioridades = Prioridad.objects.all()
+
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        nombre_cliente = request.POST.get('nombre_cliente')
+        correo_cliente = request.POST.get('correo_cliente')
+        numero_cliente = request.POST.get('numero_cliente')
+        categoria_id = request.POST.get('categoria')
+        prioridad_id = request.POST.get('prioridad')
+        detalle = request.POST.get('detalle')
+        imagen = request.FILES.get('imagen')
+        fecha_creacion = request.POST.get('fecha_creacion')  
+        fecha_creacion = datetime.strptime(fecha_creacion, '%Y-%m-%d').date()
+
+        try:
+            cliente, created = Cliente.objects.get_or_create(
+                nombre=nombre_cliente,
+                email=correo_cliente,
+                telefono=numero_cliente
+            )
+
+            estado = Estado.objects.get(nombre="En espera")
+            categoria = CategoriaProblema.objects.get(id=categoria_id)
+            prioridad = Prioridad.objects.get(id=prioridad_id)
+
+            ticket = Ticket(
+                cliente=cliente,
+                categoria=categoria,
+                estado=estado,
+                prioridad=prioridad,
+                detalle=detalle,
+                fecha_creacion=fecha_creacion  # Asignar la fecha
+            )
+            ticket.save()
+
+            if imagen:
+                imagen_obj = Imagen(
+                    ticket=ticket,
+                    imagen=imagen
+                )
+                imagen_obj.save()
+
+            # Mensaje de éxito
+            messages.success(request, f"Ticket creado para {nombre_cliente} con ID {ticket.id_compuesto}")
+            return redirect('nuevoticket', rol=rol, clave=clave, nombre=nombre)
+        except Exception as e:
+            # Mensaje de error
+            messages.error(request, f"No se pudo registrar el ticket. Error: {e}")
+            return redirect('nuevoticket', rol=rol, clave=clave, nombre=nombre)
+        
+def ver_archivados(request, ticket_id2, rol, clave, nombre):
+    # Obtener el ticket archivado utilizando 'id_compuesto' como clave primaria
+    ticket2 = get_object_or_404(TicketsArchivados, id_compuesto=ticket_id2)  # Asegúrate de que es TicketsArchivados
+    
+    # Buscar la primera imagen asociada al ticket archivado
+    imagen = Imagen.objects.filter(ticket_archivado=ticket2).first()
+
+    # Obtener todos los comentarios asociados al ticket archivado
+    comentarios = Comentario.objects.filter(ticket_archivado=ticket2).all()
+
+    # Pasar el ticket, la imagen, los comentarios y las variables al contexto de la plantilla
+    return render(request, 'ver_archivados.html', {
+        'ticket2': ticket2,
+        'rol': rol,
+        'clave': clave,
+        'nombre': nombre,
+        'imagen': imagen.imagen.url if imagen else None,  # Verifica si hay imagen
+        'comentarios': comentarios,
+    })
+
 

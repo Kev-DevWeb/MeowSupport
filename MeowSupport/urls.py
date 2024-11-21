@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from FastMeow.views import abrirticket, menu, status, guardar_ticket, buscar_status_por_id_compuesto, menu2, ver, agregar_comentario, editar, eliminar
+from FastMeow.views import abrirticket, menu, status, guardar_ticket, buscar_status_por_id_compuesto, menu2, ver, agregar_comentario, editar, eliminar, nuevoticket, guardar_ticket2, ver_archivados
 
 urlpatterns = [
     path('', menu, name='menu'),  
@@ -32,6 +32,9 @@ urlpatterns = [
     path('ticket/<str:ticket_id>/agregar_comentario/<str:rol>/<str:clave>/<str:nombre>/', agregar_comentario, name='agregar_comentario'),
     path('editar/<str:ticket_id>/<str:rol>/<str:clave>/<str:nombre>/', editar, name='editar'),
     path('eliminar/<str:ticket_id>/<str:rol>/<str:clave>/<str:nombre>/', eliminar, name='eliminar'),
+    path('nuevoticket/<str:rol>/<str:clave>/<str:nombre>/', nuevoticket, name='nuevoticket'),
+    path('guardar_ticket2/<str:rol>/<str:clave>/<str:nombre>/', guardar_ticket2, name='guardar_ticket2'),
+    path('ver_archivados/<str:ticket_id2>/<str:rol>/<str:clave>/<str:nombre>/', ver_archivados, name='ver_archivados'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

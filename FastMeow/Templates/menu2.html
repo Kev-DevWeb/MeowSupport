@@ -144,11 +144,17 @@
                 <td>{{ ticket.prioridad }}</td>
                 <td>
                     <a href="{% url 'ver' ticket_id=ticket.id_compuesto rol=rol clave=clave nombre=nombre %}" class="btn btn-info btn-sm">Ver</a>
-                    <a href="{% url 'editar' ticket_id=ticket.id_compuesto rol=rol clave=clave nombre=nombre %}" class="btn btn-warning btn-sm">Editar</a>
-                    <form action="#" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este ticket?');">Eliminar</button>
-                    </form>
+                    {% if rol != 'tecnico' %}
+                        <a href="{% url 'editar' ticket_id=ticket.id_compuesto rol=rol clave=clave nombre=nombre %}" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="{% url 'eliminar' ticket_id=ticket.id_compuesto rol=rol clave=clave nombre=nombre %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este ticket?');">
+                                Eliminar
+                            </button>
+                        </form>
+                    {% endif %}
                 </td>
+                
             </tr>
             {% empty %}
             <tr>
@@ -158,34 +164,46 @@
         </tbody>
     </table>
 
+    
+    <div><a href="{% url 'nuevoticket' rol=rol clave=clave nombre=nombre %}"  class="btn btn-success">Nuevo Ticket</a></div>
+    {% if rol != 'tecnico' %}
     <!-- Tabla de tickets archivados -->
     <h2 class="mt-5">Tickets Archivados</h2>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Cliente</th>
-                <th>Categoría</th>
-                <th>Estado</th>
-                <th>Prioridad</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ticket_archivado in tickets_archivados %}
-            <tr class="table-secondary">
-                <td>{{ ticket_archivado.id_compuesto }}</td>
-                <td>{{ ticket_archivado.cliente }}</td>
-                <td>{{ ticket_archivado.categoria }}</td>
-                <td>{{ ticket_archivado.estado }}</td>
-                <td>{{ ticket_archivado.prioridad }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center">No hay tickets archivados disponibles.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Tabla de tickets archivados -->
+<h2 class="mt-5">Tickets Archivados</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket_archivado in tickets_archivados %}
+        <tr class="table-secondary">
+            <td>{{ ticket_archivado.id_compuesto }}</td>
+            <td>{{ ticket_archivado.cliente }}</td>
+            <td>{{ ticket_archivado.categoria }}</td>
+            <td>{{ ticket_archivado.estado }}</td>
+            <td>{{ ticket_archivado.prioridad }}</td>
+            <td>
+                <!-- Corregir para usar 'ticket_archivado.id_compuesto' -->
+                <a href="{% url 'ver_archivados' ticket_id2=ticket_archivado.id_compuesto rol=rol clave=clave nombre=nombre %}" class="btn btn-info btn-sm">Ver</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No hay tickets archivados disponibles.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    {% endif %}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
